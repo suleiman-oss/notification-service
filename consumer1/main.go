@@ -12,7 +12,7 @@ import (
 func main() {
 	con, err := CreateConsumer()
 	if err != nil {
-		log.Fatal("Error while creating Kafka producer")
+		log.Fatal("Error while creating Kafka consumer 1")
 	}
 	defer con.Close()
 	db, err := database.DatabaseInit()

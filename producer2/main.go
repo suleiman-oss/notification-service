@@ -14,6 +14,6 @@ func main() {
 	db, _ := database.DatabaseInit()
 	defer db.Close()
 	r := mux.NewRouter()
-	r.HandleFunc("/urgent", Producer1Handler(producer2, db)).Methods("POST")
+	r.HandleFunc("/produce/urgent", Producer1Handler(producer2, db)).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8002", r))
 }
