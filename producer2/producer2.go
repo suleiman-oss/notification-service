@@ -1,13 +1,14 @@
 package main
 
 import (
-	"dependencies/notificationService/producer2/database"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"notification/producer2/database"
 
 	"github.com/IBM/sarama"
+	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 )
 
@@ -49,4 +50,15 @@ func Producer1Handler(producer sarama.SyncProducer, db *gorm.DB) http.HandlerFun
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "Message sent successfully and saved to the database")
 	}
+}
+
+func main() {
+	producer2, _ := CreateProducer()
+	defer producer2.Close()
+	db, _ := database.DatabaseInit()
+	defer db.Close()
+	_ = database.Migrate(db)
+	r := mux.NewRouter()
+	r.HandleFunc("/produce/urgent", Producer1Handler(producer2, db)).Methods("POST")
+	log.Fatal(http.ListenAndServe(":8002", r))
 }
